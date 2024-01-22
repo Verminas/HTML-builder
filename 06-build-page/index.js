@@ -18,9 +18,12 @@ async function createNewPage() {
     let pageData = await fs.readFile(templatePath, 'utf-8');
     for (const componentFile of componentsFiles) {
       const componentPath = path.join(componentsPath, componentFile);
+      const componentExtName = path.extname(componentFile);
+      if (componentExtName === '.html') {
       const componentData = await fs.readFile(componentPath, 'utf-8');
-      const componentName = path.basename(componentFile, path.extname(componentFile));
+      const componentName = path.basename(componentFile, componentExtName);
       pageData = pageData.replace(`{{${componentName}}}`, componentData);
+      }
     }
     await fs.writeFile(newPage, pageData);
     console.log('Index.html is created sucsessful');
