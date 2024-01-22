@@ -11,21 +11,17 @@ fs.mkdir(copyAssetsPath, { recursive: true });
 async function createNewPage() {
   const templatePath = path.join(__dirname, 'template.html');
   const newPage = path.join(projectPath, 'index.html');
-  
   const componentsPath = path.join(__dirname, 'components');
-  const articlesPath = path.join(componentsPath, 'articles.html');
-  const footerPath = path.join(componentsPath, 'footer.html');
-  const headerPath = path.join(componentsPath, 'header.html');
-
-  const articlesData = await fs.readFile(articlesPath, 'utf-8');
-  const footerData = await fs.readFile(footerPath, 'utf-8');
-  const headerData = await fs.readFile(headerPath, 'utf-8');
+  const componentsFiles = await fs.readdir(componentsPath);
 
   try {
     let pageData = await fs.readFile(templatePath, 'utf-8');
-    pageData = pageData.replace('{{header}}', headerData);
-    pageData = pageData.replace('{{articles}}', articlesData);
-    pageData = pageData.replace('{{footer}}', footerData);
+    for (const componentFile of componentsFiles) {
+      const componentPath = path.join(componentsPath, componentFile);
+      const componentData = await fs.readFile(componentPath, 'utf-8');
+      const componentName = path.basename(componentFile, path.extname(componentFile));
+      pageData = pageData.replace(`{{${componentName}}}`, componentData);
+    }
     await fs.writeFile(newPage, pageData);
     console.log('Index.html is created sucsessful');
 
