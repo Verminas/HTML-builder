@@ -1,9 +1,12 @@
-//const { error } = require('console');
 const fs = require('fs').promises;
 const path = require('path');
 
 const projectPath = path.join(__dirname, 'project-dist');
 fs.mkdir(projectPath, { recursive: true });
+
+const assetsPath = path.join(__dirname, 'assets');
+const copyAssetsPath = path.join(projectPath, 'assets');
+fs.mkdir(copyAssetsPath, { recursive: true });
 
 async function createNewPage() {
   const templatePath = path.join(__dirname, 'template.html');
@@ -53,4 +56,31 @@ async function createStyleFile() {
 }
 createStyleFile();
 
+async function copyFolders() {
+  try {
+    await copyDir(assetsPath, copyAssetsPath);
+    console.log('The folder "assets" is copied sucsessful');
 
+  } catch(error) {
+    console.log('There is a error with copy folder assets: ', error);
+  }
+}
+copyFolders();
+
+async function copyDir(sourceDir, destDir) {
+  await fs.mkdir(destDir, { recursive: true });
+  const files = await fs.readdir(sourceDir);
+  
+  for (const file of files) {
+    const sourcePath = path.join(sourceDir, file);
+    const destPath = path.join(destDir, file);
+    const stat = await fs.stat(sourcePath);
+
+    if (stat.isFile()) {   
+      await fs.copyFile(sourcePath, destPath);
+    } else if (stat.isDirectory()) {
+    await copyDir(sourcePath, destPath);
+    }
+  }
+}
+  
