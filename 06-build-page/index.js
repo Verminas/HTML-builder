@@ -35,7 +35,7 @@ async function createStyleFile() {
   let allStyleData = '';
   const newStyleFile = path.join(projectPath, 'style.css');
   const stylesDir = path.join(__dirname, 'styles');
-  const styleFiles = ['01-header.css', '02-main.css', '03-footer.css'];
+  const styleFiles = await fs.readdir(stylesDir);
 
   try {
     for (const styleFile of styleFiles) {
