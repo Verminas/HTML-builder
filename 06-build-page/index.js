@@ -29,7 +29,6 @@ async function createNewPage() {
     console.log('There is a error: ', error);
   }
 }
-createNewPage();
 
 async function createStyleFile() {
   let allStyleData = '';
@@ -50,7 +49,6 @@ async function createStyleFile() {
     console.log('There is a error: ', error);
   }
 }
-createStyleFile();
 
 async function copyFolders() {
   try {
@@ -61,7 +59,6 @@ async function copyFolders() {
     console.log('There is a error with copy folder assets: ', error);
   }
 }
-copyFolders();
 
 async function copyDir(sourceDir, destDir) {
   await fs.mkdir(destDir, { recursive: true });
@@ -79,4 +76,7 @@ async function copyDir(sourceDir, destDir) {
     }
   }
 }
-  
+
+createNewPage();
+createStyleFile();
+copyFolders();
